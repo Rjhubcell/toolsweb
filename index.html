@@ -3,731 +3,654 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MultiTools — Image / Document / Text / Dev / Calculators</title>
-  <meta name="description" content="Responsive multi-tools web app (Image, Document, Text, Dev, Calculators). Ready for GitHub Pages." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <title>Tool Hub — Tools Wonder</title>
+  <meta name="description" content="Tool Hub — Convert, calculate, compress and simplify everyday tasks. Fast, free, and mobile friendly." />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
+    /* ========== Theme Variables ========== */
     :root{
-      --bg:#071022;
-      --card:#0b1220;
+      --bg: #f5f9ff;
+      --card:#ffffff;
+      --muted:#64748b;
+      --accent:#1e88e5;
+      --accent-600:#1565c0;
+      --glass: rgba(30,136,229,0.08);
+      --shadow: rgba(2,6,23,0.08);
+      --radius:12px;
+      --page-pad:18px;
+      --text: #0f1724;
+    }
+    [data-theme="dark"]{
+      --bg: #071025;
+      --card: #0b1220;
       --muted:#9aa4b2;
       --accent:#06b6d4;
-      --glass:rgba(255,255,255,0.03);
-      --radius:12px;
-      --maxw:1100px;
+      --accent-600:#0284c7;
+      --glass: rgba(255,255,255,0.03);
+      --shadow: rgba(2,6,23,0.6);
+      --text: #e6eef6;
     }
+
+    /* ========== Reset & Layout ========== */
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,var(--bg) 0%, #081428 60%);color:#e6eef6}
-    .wrap{max-width:var(--maxw);margin:18px auto;padding:18px}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:16px;position:sticky;top:0;background:linear-gradient(180deg, rgba(2,6,15,0.6), rgba(2,6,15,0.2));backdrop-filter: blur(4px);padding:10px;border-radius:10px}
-    .logo h1{margin:0;font-size:18px}
-    .logo p{margin:0;font-size:12px;color:var(--muted)}
-    nav{margin-left:auto}
-    nav a{color:var(--muted);text-decoration:none;margin-left:14px;font-size:14px}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:14px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(2,6,23,0.6)}
-    h2{margin:0 0 8px 0}
-    .small{font-size:13px;color:var(--muted)}
-    .tools{display:flex;flex-direction:column;gap:10px}
-    .tool-card{display:flex;align-items:center;gap:12px;background:var(--glass);padding:10px;border-radius:10px;cursor:pointer}
-    .tool-card:hover{transform:translateY(-3px);transition:all .18s}
-    .tool-page{display:none}
-    .tool-page.active{display:block}
-    .row{display:flex;flex-direction:column;gap:12px}
-    input,select,textarea,button{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-    button{cursor:pointer;background:linear-gradient(90deg,var(--accent),#3b82f6);border:none;color:#022; font-weight:600}
-    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px;padding:12px;border-radius:8px}
-    @media(min-width:920px){
-      .grid{grid-template-columns:320px 1fr}
-      .row{flex-direction:row}
-      .row> *{flex:1}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Arial,sans-serif;background:linear-gradient(180deg,var(--bg), rgba(0,0,0,0));color:var(--text);-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+    .wrap{max-width:1200px;margin:20px auto;padding:var(--page-pad)}
+    header{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo {font-weight:700;letter-spacing:0.3px}
+    .logo small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+    nav{display:flex;align-items:center;gap:12px}
+    nav a{color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:8px}
+    nav a:hover{background:var(--glass);color:var(--text)}
+    /* hamburger for mobile */
+    .hamburger{display:none;border:none;background:transparent;color:var(--muted);font-size:20px;cursor:pointer}
+
+    /* hero */
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:center;padding:22px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);box-shadow:0 8px 30px var(--shadow);margin-top:12px}
+    .hero h1{margin:0;font-size:28px;color:var(--accent)}
+    .hero p{margin:10px 0;color:var(--muted)}
+    .cta{background:linear-gradient(90deg,var(--accent),var(--accent-600));color:white;padding:12px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+    .illustration{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .illus-bubble{width:84px;height:84px;border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--shadow)}
+
+    /* search */
+    .search-wrap{display:flex;gap:12px;align-items:center;margin:18px 0}
+    .search{flex:1;display:flex;gap:8px;align-items:center;background:var(--card);padding:8px;border-radius:10px;box-shadow:0 6px 12px var(--shadow)}
+    .search input{flex:1;border:0;outline:none;background:transparent;padding:10px;font-size:15px;color:var(--text)}
+    .search button{background:var(--accent);border:none;color:white;padding:10px 12px;border-radius:8px;cursor:pointer}
+    .controls{display:flex;gap:8px;align-items:center}
+    .select{background:var(--card);border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* sections & cards */
+    .section{margin-top:18px;padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .section-head h2{margin:0;font-size:18px;color:var(--accent)}
+    .section-head p{margin:0;color:var(--muted);font-size:13px}
+    .accordion-btn{background:transparent;border:0;color:var(--muted);cursor:pointer}
+    .tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:14px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 8px 20px var(--shadow);transition:transform .18s ease,box-shadow .18s ease;display:flex;flex-direction:column;gap:8px;min-height:140px}
+    .card:hover{transform:translateY(-6px);box-shadow:0 12px 28px var(--shadow)}
+    .card .icon{font-size:28px;color:var(--accent)}
+    .card h3{margin:0;font-size:16px}
+    .card p{margin:0;color:var(--muted);font-size:13px;flex:1}
+    .card .btn-row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .btn{background:var(--accent);border:none;color:white;padding:8px 10px;border-radius:8px;text-decoration:none;font-weight:600;cursor:pointer}
+    .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03)}
+
+    /* footer */
+    footer{margin-top:24px;padding:14px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* small devices */
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr;gap:14px}
+      nav{display:none}
+      .hamburger{display:inline-block}
+      .wrap{padding:12px}
+      .illus-bubble{width:70px;height:70px}
     }
-    .tools-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    @media(min-width:920px){.tools-list{grid-template-columns:1fr}}
-    .muted{color:var(--muted)}
-    .hidden{display:none}
-    textarea{min-height:100px;resize:vertical}
-    .help{font-size:12px;color:var(--muted);margin-top:6px}
+    /* accessibility focus */
+    a:focus, button:focus, input:focus { outline: 3px solid rgba(6,182,212,0.15); outline-offset:2px; }
   </style>
 </head>
-<body>
+<body data-theme="light">
   <div class="wrap">
-    <header>
-      <div class="logo">
-        <h1>MultiTools</h1>
-        <p class="small">Image · Document · Text · Dev · Calculators</p>
+    <header role="banner">
+      <div class="brand">
+        <div class="logo" aria-hidden="false">
+          Tools Wonder
+          <small>Tool Hub</small>
+        </div>
       </div>
 
-      <nav id="nav">
-        <a href="#" data-open="image">Image Tools</a>
-        <a href="#" data-open="doc">Document</a>
-        <a href="#" data-open="calc">Calculators</a>
-        <a href="#" data-open="text">Text Tools</a>
-        <a href="#" data-open="dev">Dev Tools</a>
+      <nav role="navigation" aria-label="Main navigation">
+        <a href="#" aria-current="page">Home</a>
+        <a href="#tools">Tools</a>
+        <a href="mailto:toolshub@gmail.com">Contact</a>
       </nav>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="themeToggle" title="Toggle dark mode" aria-pressed="false" class="hamburger"><i class="fa-solid fa-moon"></i></button>
+        <button id="mobileNavBtn" class="hamburger" aria-expanded="false" aria-controls="mobileNav" aria-label="Open navigation"><i class="fa-solid fa-bars"></i></button>
+      </div>
     </header>
 
-    <div class="grid">
-      <!-- Sidebar -->
-      <aside class="card">
-        <h2>Sections</h2>
-        <div class="tools">
-          <div>
-            <h3 class="small">Image Tools</h3>
-            <div class="tools-list">
-              <div class="tool-card" data-tool="img-convert"><div>🖼️</div><div>Image Converter</div></div>
-              <div class="tool-card" data-tool="img-compress"><div>⚡</div><div>Image Compressor</div></div>
-              <div class="tool-card" data-tool="img-resize"><div>📐</div><div>Image Resizer</div></div>
-              <div class="tool-card" data-tool="img-crop"><div>✂️</div><div>Image Cropper</div></div>
-              <div class="tool-card" data-tool="img-ocr"><div>🔎</div><div>Image to Text (OCR)</div></div>
-              <div class="tool-card" data-tool="img-rotate"><div>🔁</div><div>Image Rotator/Flipper</div></div>
-            </div>
-          </div>
+    <!-- Mobile nav (hidden by default) -->
+    <div id="mobileNav" style="display:none;margin-top:10px">
+      <nav style="display:flex;flex-direction:column;gap:8px">
+        <a href="#">Home</a>
+        <a href="#tools">Tools</a>
+        <a href="mailto:toolshub@gmail.com">Contact</a>
+      </nav>
+    </div>
 
-          <div>
-            <h3 class="small">Document Tools</h3>
-            <div class="tools-list">
-              <div class="tool-card" data-tool="img2pdf"><div>📄</div><div>Image → PDF</div></div>
-              <div class="tool-card" data-tool="pdf-compress"><div>📦</div><div>PDF Compressor</div></div>
-              <div class="tool-card" data-tool="pdf-merge"><div>🔀</div><div>PDF Merger & Splitter</div></div>
-              <div class="tool-card" data-tool="pdf-lock"><div>🔒</div><div>PDF Lock/Unlock</div></div>
-              <div class="tool-card" data-tool="esign"><div>✍️</div><div>eSign PDF</div></div>
-              <div class="tool-card" data-tool="pdf2word"><div>📝</div><div>PDF → Word (placeholder)</div></div>
-            </div>
-          </div>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div>
+        <h1 id="hero-heading">Your Daily Tools, All in one Place</h1>
+        <p>Convert, calculate, compress, and simplify your everyday tasks — fast and free.</p>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="cta" id="exploreBtn">Explore Tools</button>
+          <button class="btn secondary" id="contactBtn" onclick="location.href='mailto:toolshub@gmail.com'"><i class="fa-regular fa-envelope"></i> Contact</button>
+        </div>
+      </div>
 
-          <div>
-            <h3 class="small">Calculators</h3>
-            <div class="tools-list">
-              <div class="tool-card" data-tool="age"><div>🎂</div><div>Age Calculator</div></div>
-              <div class="tool-card" data-tool="bmi"><div>⚖️</div><div>BMI Calculator</div></div>
-              <div class="tool-card" data-tool="emi"><div>🏦</div><div>Loan EMI Calculator</div></div>
-              <div class="tool-card" data-tool="gst"><div>🧾</div><div>GST Calculator</div></div>
-              <div class="tool-card" data-tool="currency"><div>💱</div><div>Currency Converter</div></div>
-            </div>
-          </div>
+      <div class="illustration" aria-hidden="true">
+        <div class="illus-bubble"><i class="fa-solid fa-image" style="font-size:22px;color:var(--accent)"></i></div>
+        <div class="illus-bubble"><i class="fa-solid fa-file" style="font-size:22px;color:var(--accent)"></i></div>
+        <div class="illus-bubble"><i class="fa-solid fa-code" style="font-size:22px;color:var(--accent)"></i></div>
+        <div class="illus-bubble"><i class="fa-solid fa-video" style="font-size:22px;color:var(--accent)"></i></div>
+      </div>
+    </section>
 
-          <div>
-            <h3 class="small">Text Tools</h3>
-            <div class="tools-list">
-              <div class="tool-card" data-tool="case"><div>🔤</div><div>Text Case Converter</div></div>
-              <div class="tool-card" data-tool="count"><div>🔢</div><div>Word & Character Counter</div></div>
-              <div class="tool-card" data-tool="uniq"><div>🧽</div><div>Remove Duplicate Lines</div></div>
-              <div class="tool-card" data-tool="sort"><div>↕️</div><div>Text Sorter</div></div>
-              <div class="tool-card" data-tool="reverse"><div>🔁</div><div>Text Reverser</div></div>
-              <div class="tool-card" data-tool="enc"><div>🔐</div><div>Text Encryptor/Decryptor</div></div>
-            </div>
-          </div>
+    <!-- Search + filter -->
+    <div class="search-wrap" role="search" aria-label="Search tools">
+      <div class="search" style="flex:1">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--muted);margin-left:8px"></i>
+        <input id="searchInput" type="search" placeholder="Search a tool,,,," aria-label="Search tools by name or keyword" />
+        <button id="clearSearch" title="Clear search" style="display:none;background:transparent;border:0;color:var(--muted);margin-right:8px"><i class="fa-solid fa-xmark"></i></button>
+      </div>
 
+      <div class="controls">
+        <select id="categoryFilter" class="select" aria-label="Filter by category">
+          <option value="all">All categories</option>
+          <option value="image">Image Tools</option>
+          <option value="document">Document Tools</option>
+          <option value="video">Video Tools</option>
+          <option value="audio">Audio Tools</option>
+          <option value="calc">Calculators</option>
+          <option value="text">Text Tools</option>
+          <option value="qr">QR & Barcode</option>
+          <option value="color">Color Tools</option>
+          <option value="dev">Developer Tools</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tools container -->
+    <main id="tools" aria-live="polite">
+      <!-- Section Template: data-cat attribute for filtering, accordion for collapse -->
+      <section class="section" data-cat="image">
+        <div class="section-head">
           <div>
-            <h3 class="small">Web / Developer Tools</h3>
-            <div class="tools-list">
-              <div class="tool-card" data-tool="minify"><div>🧩</div><div>HTML/CSS/JS Minifier</div></div>
-              <div class="tool-card" data-tool="json"><div>🗂️</div><div>JSON Formatter & Validator</div></div>
-              <div class="tool-card" data-tool="b64"><div>📦</div><div>Base64 Encode/Decode</div></div>
-              <div class="tool-card" data-tool="url"><div>🔗</div><div>URL Encode/Decode</div></div>
-              <div class="tool-card" data-tool="color"><div>🎨</div><div>Color Picker & Converter</div></div>
-              <div class="tool-card" data-tool="regex"><div>🧪</div><div>Regex Tester</div></div>
-            </div>
+            <h2>Image Tools</h2>
+            <p>Convert, resize, compress, and edit images — quick and client-friendly.</p>
+          </div>
+          <div>
+            <button class="accordion-btn" data-target="image" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button>
           </div>
         </div>
-      </aside>
 
-      <!-- Main -->
-      <main>
-        <!-- IMAGE TOOLS -->
-        <section id="img-convert" class="card tool-page">
-          <h2>Image Converter</h2>
-          <p class="small">Upload an image and convert between PNG, JPEG, and WEBP. Client-side only.</p>
-          <div class="row">
-            <input type="file" id="imgConvertFile" accept="image/*">
-            <select id="imgConvertFormat">
-              <option value="image/png">PNG</option>
-              <option value="image/jpeg">JPEG</option>
-              <option value="image/webp">WEBP</option>
-            </select>
-            <button id="imgConvertBtn">Convert & Download</button>
-          </div>
-          <canvas id="imgConvertCanvas" class="hidden"></canvas>
-        </section>
-
-        <section id="img-compress" class="card tool-page">
-          <h2>Image Compressor</h2>
-          <p class="small">Choose quality (0.1 - 1.0) to reduce size (JPEG/WEBP only)</p>
-          <div class="row">
-            <input type="file" id="imgCompressFile" accept="image/*">
-            <input type="range" id="imgQuality" min="0.1" max="1" value="0.8" step="0.05">
-            <button id="imgCompressBtn">Compress & Download</button>
-          </div>
-        </section>
-
-        <section id="img-resize" class="card tool-page">
-          <h2>Image Resizer</h2>
-          <p class="small">Resize by width or height (pixels)</p>
-          <div class="row">
-            <input type="file" id="imgResizeFile" accept="image/*">
-            <input type="number" id="imgWidth" placeholder="Width px (auto if empty)">
-            <input type="number" id="imgHeight" placeholder="Height px (auto if empty)">
-            <button id="imgResizeBtn">Resize & Download</button>
-          </div>
-        </section>
-
-        <section id="img-crop" class="card tool-page">
-          <h2>Image Cropper</h2>
-          <p class="small">Touch-friendly selection cropper (pointer events)</p>
-          <div class="row">
-            <input type="file" id="imgCropFile" accept="image/*">
-            <div style="position:relative;background:#051225;border-radius:10px;padding:8px;">
-              <canvas id="imgCropCanvas" style="max-width:100%;display:block;border-radius:8px"></canvas>
-              <div id="cropActions" style="margin-top:8px;display:flex;gap:8px"><button id="doCrop">Crop</button><button id="resetCrop">Reset</button></div>
+        <div class="tool-grid" id="image-grid">
+          <article class="card" data-tags="image converter png jpg webp" role="article" aria-label="Image Converter">
+            <div class="icon"><i class="fa-solid fa-file-image"></i></div>
+            <h3>Image Converter</h3>
+            <p>Convert images (PNG, JPG, WEBP) client-side quickly.</p>
+            <div class="btn-row">
+              <a class="btn" href="#" aria-label="Open Image Converter">Use Tool</a>
+              <button class="btn secondary" aria-label="More info">Info</button>
             </div>
-          </div>
-        </section>
+          </article>
 
-        <section id="img-ocr" class="card tool-page">
-          <h2>Image to Text (OCR)</h2>
-          <p class="small">Uses Tesseract.js (CDN). First run may take a moment while the model loads.</p>
-          <div class="row">
-            <input type="file" id="imgOcrFile" accept="image/*">
-            <button id="imgOcrBtn">Run OCR</button>
-            <textarea id="imgOcrOut" rows="6" placeholder="Detected text will appear here"></textarea>
-            <div class="help">Tip: crop the image first for better accuracy.</div>
-          </div>
-        </section>
-
-        <section id="img-rotate" class="card tool-page">
-          <h2>Image Rotator / Flipper</h2>
-          <p class="small">Rotate in 90° steps or flip horizontally/vertically.</p>
-          <div class="row">
-            <input type="file" id="imgRotateFile" accept="image/*">
-            <div style="display:flex;gap:8px">
-              <button id="rot90">Rotate 90°</button>
-              <button id="flipH">Flip H</button>
-              <button id="flipV">Flip V</button>
-              <button id="saveRotate">Save Image</button>
+          <article class="card" data-tags="compress compress image jpeg webp" role="article" aria-label="Image Compressor">
+            <div class="icon"><i class="fa-solid fa-compress"></i></div>
+            <h3>Image Compressor</h3>
+            <p>Reduce image file size while preserving quality.</p>
+            <div class="btn-row">
+              <a class="btn" href="#">Use Tool</a>
+              <button class="btn secondary">Info</button>
             </div>
-            <canvas id="imgRotateCanvas" style="max-width:100%;display:block;border-radius:8px"></canvas>
-          </div>
-        </section>
+          </article>
 
-        <!-- DOCUMENT TOOLS -->
-        <section id="img2pdf" class="card tool-page">
-          <h2>Image → PDF</h2>
-          <p class="small">Create a PDF from one or more images (client-side using jsPDF).</p>
-          <div class="row">
-            <input type="file" id="img2pdfFiles" accept="image/*" multiple>
-            <button id="img2pdfBtn">Create PDF</button>
-          </div>
-        </section>
-
-        <section id="pdf-compress" class="card tool-page">
-          <h2>PDF Compressor (basic)</h2>
-          <p class="small">Basic compression demo — for production use server-side tools.</p>
-          <div class="row">
-            <input type="file" id="pdfCompressFile" accept="application/pdf">
-            <button id="pdfCompressBtn">Compress PDF (demo)</button>
-          </div>
-        </section>
-
-        <section id="pdf-merge" class="card tool-page">
-          <h2>PDF Merger & Splitter</h2>
-          <p class="small">Merge multiple PDFs or split a PDF into pages (PDF-Lib)</p>
-          <div class="row">
-            <input type="file" id="pdfMergeFiles" accept="application/pdf" multiple>
-            <div style="display:flex;gap:8px">
-              <button id="pdfMergeBtn">Merge Selected</button>
-              <button id="pdfSplitBtn">Split (one file only)</button>
+          <article class="card" data-tags="resize image crop" role="article" aria-label="Image Resizer and Cropper">
+            <div class="icon"><i class="fa-solid fa-expand"></i></div>
+            <h3>Image Resizer</h3>
+            <p>Resize images for web or print, or crop with precision.</p>
+            <div class="btn-row">
+              <a class="btn" href="#">Use Tool</a>
+              <button class="btn secondary">Info</button>
             </div>
+          </article>
+
+          <article class="card" data-tags="ocr text image" role="article" aria-label="Image to Text OCR">
+            <div class="icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3>Image to Text (OCR)</h3>
+            <p>Extract text from images (Tesseract demo / API).</p>
+            <div class="btn-row">
+              <a class="btn" href="#">Use Tool</a>
+              <button class="btn secondary">Info</button>
+            </div>
+          </article>
+
+          <article class="card" data-tags="rotate flip image" role="article" aria-label="Image Rotator">
+            <div class="icon"><i class="fa-solid fa-rotate-right"></i></div>
+            <h3>Image Rotator / Flipper</h3>
+            <p>Rotate and flip images in 90° steps or flip horizontally/vertically.</p>
+            <div class="btn-row">
+              <a class="btn" href="#">Use Tool</a>
+              <button class="btn secondary">Info</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Document Tools -->
+      <section class="section" data-cat="document">
+        <div class="section-head">
+          <div>
+            <h2>Document Tools</h2>
+            <p>PDF and document conversion, merging, compression and signing.</p>
           </div>
-        </section>
+          <div><button class="accordion-btn" data-target="document" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
 
-        <section id="pdf-lock" class="card tool-page">
-          <h2>PDF Lock / Unlock (placeholder)</h2>
-          <p class="small">Password protect/unprotect is limited in-browser — server recommended.</p>
-          <div class="row">
-            <input type="file" id="pdfLockFile" accept="application/pdf">
-            <input type="password" id="pdfLockPass" placeholder="Password">
-            <button id="pdfLockBtn">Apply (placeholder)</button>
-          </div>
-        </section>
+        <div class="tool-grid" id="document-grid">
+          <article class="card" data-tags="pdf image pdf2image image2pdf" role="article">
+            <div class="icon"><i class="fa-solid fa-file-pdf"></i></div>
+            <h3>Image → PDF / PDF → Image</h3>
+            <p>Convert images to PDFs or export PDF pages as images.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="esign" class="card tool-page">
-          <h2>eSign PDF (draw signature)</h2>
-          <p class="small">Draw signature; integration shows how to embed with PDF-Lib.</p>
-          <div class="row">
-            <input type="file" id="esignPdfFile" accept="application/pdf">
-            <canvas id="signCanvas" style="border:1px solid rgba(255,255,255,0.04);height:140px"></canvas>
-            <div style="display:flex;gap:8px"><button id="clearSign">Clear</button><button id="applySign">Apply Signature (demo)</button></div>
-          </div>
-        </section>
+          <article class="card" data-tags="pdf word convert" role="article">
+            <div class="icon"><i class="fa-solid fa-file-word"></i></div>
+            <h3>PDF → Word</h3>
+            <p>Extract text & convert to Word (server/API recommended).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="pdf2word" class="card tool-page">
-          <h2>PDF → Word (placeholder)</h2>
-          <p class="small">Full PDF→Word requires a server/API. This extracts basic text only.</p>
-          <div class="row">
-            <input type="file" id="pdf2wordFile" accept="application/pdf">
-            <button id="pdf2wordBtn">Extract Text (demo)</button>
-            <textarea id="pdf2wordOut" rows="6"></textarea>
-          </div>
-        </section>
+          <article class="card" data-tags="pdf compress" role="article">
+            <div class="icon"><i class="fa-solid fa-down-left-and-up-right-to-center"></i></div>
+            <h3>PDF Compressor</h3>
+            <p>Reduce PDF size (basic in-browser demo or server for best results).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <!-- CALCULATORS -->
-        <section id="age" class="card tool-page">
-          <h2>Age Calculator</h2>
-          <div class="row"><input type="date" id="birthDate"><button id="calcAge">Calculate Age</button><div id="ageOut" class="muted"></div></div>
-        </section>
+          <article class="card" data-tags="pdf merge split" role="article">
+            <div class="icon"><i class="fa-solid fa-code-merge"></i></div>
+            <h3>PDF Merger & Splitter</h3>
+            <p>Merge PDFs or split them into single pages.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="bmi" class="card tool-page">
-          <h2>BMI Calculator</h2>
-          <div class="row"><input type="number" id="weight" placeholder="Weight kg"><input type="number" id="height" placeholder="Height cm"><button id="calcBmi">Calculate BMI</button><div id="bmiOut" class="muted"></div></div>
-        </section>
+          <article class="card" data-tags="pdf lock unlock password" role="article">
+            <div class="icon"><i class="fa-solid fa-lock"></i></div>
+            <h3>PDF Lock / Unlock</h3>
+            <p>Password protect or remove password (server recommended).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="emi" class="card tool-page">
-          <h2>Loan EMI Calculator</h2>
-          <div class="row"><input type="number" id="loanAmt" placeholder="Loan Amount"><input type="number" id="interest" placeholder="Annual Interest %"><input type="number" id="loanTenure" placeholder="Tenure (years)"><button id="calcEmi">Calculate EMI</button><div id="emiOut" class="muted"></div></div>
-        </section>
+          <article class="card" data-tags="pdf sign esign signature" role="article">
+            <div class="icon"><i class="fa-solid fa-pencil"></i></div>
+            <h3>eSign PDF</h3>
+            <p>Draw & place a signature on PDF pages (demo only).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
 
-        <section id="gst" class="card tool-page">
-          <h2>GST Calculator</h2>
-          <div class="row"><input type="number" id="gstAmount" placeholder="Amount"><select id="gstRate"><option>5</option><option>12</option><option selected>18</option><option>28</option></select><button id="calcGst">Calc GST</button><div id="gstOut" class="muted"></div></div>
-        </section>
+      <!-- Video Tools -->
+      <section class="section" data-cat="video">
+        <div class="section-head">
+          <div><h2>Video Tools</h2><p>Convert, trim, compress videos (some features need server-side handling).</p></div>
+          <div><button class="accordion-btn" data-target="video" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
 
-        <section id="currency" class="card tool-page">
-          <h2>Currency Converter (manual)</h2>
-          <p class="small">Demo uses manual rate input. For live rates integrate an API (exchangerate.host etc.).</p>
-          <div class="row"><input id="curAmt" type="number" placeholder="Amount"><input id="curRate" type="number" placeholder="Rate (1 unit = X target)"><button id="curConvert">Convert</button><div id="curOut" class="muted"></div></div>
-        </section>
+        <div class="tool-grid" id="video-grid">
+          <article class="card" data-tags="video convert mp4 webm" role="article">
+            <div class="icon"><i class="fa-solid fa-video"></i></div>
+            <h3>Video Converter</h3>
+            <p>Convert videos between common formats (server recommended for heavy files).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <!-- TEXT TOOLS -->
-        <section id="case" class="card tool-page">
-          <h2>Text Case Converter</h2>
-          <textarea id="caseIn" rows="4"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button data-action="upper">UPPER</button><button data-action="lower">lower</button><button data-action="title">Title Case</button><button data-action="sentence">Sentence case</button></div>
-          <textarea id="caseOut" rows="4" style="margin-top:8px"></textarea>
-        </section>
+          <article class="card" data-tags="video cut trim" role="article">
+            <div class="icon"><i class="fa-solid fa-scissors"></i></div>
+            <h3>Video Cutter</h3>
+            <p>Trim or clip videos quickly (basic client-side demo).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
 
-        <section id="count" class="card tool-page">
-          <h2>Word & Character Counter</h2>
-          <textarea id="countIn" rows="4"></textarea>
-          <div class="small muted" id="countOut">Words: 0 — Characters: 0</div>
-        </section>
+      <!-- Audio Tools -->
+      <section class="section" data-cat="audio">
+        <div class="section-head">
+          <div><h2>Audio Tools</h2><p>Convert, trim and edit audio files easily.</p></div>
+          <div><button class="accordion-btn" data-target="audio" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
 
-        <section id="uniq" class="card tool-page">
-          <h2>Remove Duplicate Lines</h2>
-          <textarea id="uniqIn" rows="6"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button id="uniqBtn">Remove Duplicates</button></div>
-          <textarea id="uniqOut" rows="6" style="margin-top:8px"></textarea>
-        </section>
+        <div class="tool-grid" id="audio-grid">
+          <article class="card" data-tags="audio mp3 convert" role="article">
+            <div class="icon"><i class="fa-solid fa-music"></i></div>
+            <h3>MP3 Converter</h3>
+            <p>Convert audio to MP3 and other formats.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="sort" class="card tool-page">
-          <h2>Text Sorter</h2>
-          <textarea id="sortIn" rows="6"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button id="sortAsc">Sort Asc</button><button id="sortDesc">Sort Desc</button></div>
-          <textarea id="sortOut" rows="6" style="margin-top:8px"></textarea>
-        </section>
+          <article class="card" data-tags="audio cut trim" role="article">
+            <div class="icon"><i class="fa-solid fa-cut"></i></div>
+            <h3>Audio Cutter</h3>
+            <p>Trim and extract audio segments easily.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
 
-        <section id="reverse" class="card tool-page">
-          <h2>Text Reverser</h2>
-          <textarea id="revIn" rows="4"></textarea>
-          <button id="revBtn">Reverse</button>
-          <textarea id="revOut" rows="4" style="margin-top:8px"></textarea>
-        </section>
+      <!-- Calculators -->
+      <section class="section" data-cat="calc">
+        <div class="section-head">
+          <div><h2>Calculators</h2><p>Quick math & finance helpers.</p></div>
+          <div><button class="accordion-btn" data-target="calc" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
 
-        <section id="enc" class="card tool-page">
-          <h2>Text Encryptor / Decryptor</h2>
-          <p class="small">Simple reversible XOR demo — not for secure uses.</p>
-          <textarea id="encIn" rows="4"></textarea>
-          <input id="encKey" placeholder="Key (any text)">
-          <div style="display:flex;gap:8px;margin-top:8px"><button id="encDo">Encrypt</button><button id="decDo">Decrypt</button></div>
-          <textarea id="encOut" rows="4" style="margin-top:8px"></textarea>
-        </section>
+        <div class="tool-grid" id="calc-grid">
+          <article class="card" data-tags="age calculator" role="article">
+            <div class="icon"><i class="fa-solid fa-birthday-cake"></i></div>
+            <h3>Age Calculator</h3>
+            <p>Calculate age in years, months, days.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <!-- DEV TOOLS -->
-        <section id="minify" class="card tool-page">
-          <h2>HTML / CSS / JS Minifier (basic)</h2>
-          <textarea id="minIn" rows="8" placeholder="Paste code here"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button data-lang="html">Minify HTML</button><button data-lang="css">Minify CSS</button><button data-lang="js">Minify JS</button></div>
-          <textarea id="minOut" rows="8" style="margin-top:8px"></textarea>
-        </section>
+          <article class="card" data-tags="bmi health" role="article">
+            <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
+            <h3>BMI Calculator</h3>
+            <p>Compute BMI from weight and height.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="json" class="card tool-page">
-          <h2>JSON Formatter & Validator</h2>
-          <textarea id="jsonIn" rows="8"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button id="jsonFmt">Format</button><button id="jsonValidate">Validate</button></div>
-          <textarea id="jsonOut" rows="8" style="margin-top:8px"></textarea>
-        </section>
+          <article class="card" data-tags="loan emi finance" role="article">
+            <div class="icon"><i class="fa-solid fa-calculator"></i></div>
+            <h3>Loan EMI Calculator</h3>
+            <p>Estimate monthly EMI for loans.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="b64" class="card tool-page">
-          <h2>Base64 Encode / Decode</h2>
-          <textarea id="b64In" rows="6"></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px"><button id="b64Enc">Encode</button><button id="b64Dec">Decode</button></div>
-          <textarea id="b64Out" rows="6" style="margin-top:8px"></textarea>
-        </section>
+          <article class="card" data-tags="tax gst" role="article">
+            <div class="icon"><i class="fa-solid fa-receipt"></i></div>
+            <h3>GST Calculator</h3>
+            <p>Calculate GST and totals quickly.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <section id="url" class="card tool-page">
-          <h2>URL Encode / Decode</h2>
-          <input id="urlIn" placeholder="Paste URL or text"><div style="display:flex;gap:8px;margin-top:8px"><button id="urlEnc">Encode</button><button id="urlDec">Decode</button></div><input id="urlOut">
-        </section>
+          <article class="card" data-tags="currency convert exchange" role="article">
+            <div class="icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+            <h3>Currency Converter</h3>
+            <p>Manual rate demo; integrate API for live rates.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
 
-        <section id="color" class="card tool-page">
-          <h2>Color Picker & Converter</h2>
-          <input type="color" id="colorPick"><input id="colorHex" placeholder="#rrggbb"><div class="small muted" id="colorOut"></div>
-        </section>
+      <!-- Text -->
+      <section class="section" data-cat="text">
+        <div class="section-head">
+          <div><h2>Text Tools</h2><p>Case change, counters, dedupe and more.</p></div>
+          <div><button class="accordion-btn" data-target="text" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
 
-        <section id="regex" class="card tool-page">
-          <h2>Regex Tester</h2>
-          <input id="regexIn" placeholder="Pattern (without / / )"><input id="regexFlags" placeholder="flags (g,i,m)"><textarea id="regexText" rows="6" placeholder="Test text..."></textarea><div style="display:flex;gap:8px;margin-top:8px"><button id="regexTest">Test</button></div><textarea id="regexOut" rows="6"></textarea>
-        </section>
+        <div class="tool-grid" id="text-grid">
+          <article class="card" data-tags="case convert uppercase lowercase title" role="article">
+            <div class="icon"><i class="fa-solid fa-font"></i></div>
+            <h3>Text Case Converter</h3>
+            <p>Upper / lower / title / sentence case.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
 
-        <footer class="card">Made for GitHub Pages • Responsive • Mobile-first — Customize & extend. © MultiTools</footer>
-      </main>
-    </div>
+          <article class="card" data-tags="count words characters" role="article">
+            <div class="icon"><i class="fa-solid fa-list-ol"></i></div>
+            <h3>Word & Character Counter</h3>
+            <p>Count words and characters in a text.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="duplicate remove" role="article">
+            <div class="icon"><i class="fa-solid fa-ban"></i></div>
+            <h3>Remove Duplicate Lines</h3>
+            <p>Remove duplicate lines from text blocks.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="sort alphabetical" role="article">
+            <div class="icon"><i class="fa-solid fa-sort-alpha-down"></i></div>
+            <h3>Text Sorter</h3>
+            <p>Sort lines ascending/descending.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="reverse text" role="article">
+            <div class="icon"><i class="fa-solid fa-reply-all"></i></div>
+            <h3>Text Reverser</h3>
+            <p>Reverse characters or lines.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="encrypt decrypt xor" role="article">
+            <div class="icon"><i class="fa-solid fa-lock"></i></div>
+            <h3>Text Encryptor / Decryptor</h3>
+            <p>Simple reversible demo (not for secure uses).</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- QR & Barcode -->
+      <section class="section" data-cat="qr">
+        <div class="section-head">
+          <div><h2>QR & Barcode Tools</h2><p>Generate and scan codes rapidly.</p></div>
+          <div><button class="accordion-btn" data-target="qr" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
+
+        <div class="tool-grid" id="qr-grid">
+          <article class="card" data-tags="qr code generate" role="article">
+            <div class="icon"><i class="fa-solid fa-qrcode"></i></div>
+            <h3>QR Code Generator</h3>
+            <p>Create QR codes for URLs, text or vCards.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="barcode generate" role="article">
+            <div class="icon"><i class="fa-solid fa-barcode"></i></div>
+            <h3>Barcode Generator</h3>
+            <p>Generate common barcode formats for labels.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Color Tools -->
+      <section class="section" data-cat="color">
+        <div class="section-head">
+          <div><h2>Color Tools</h2><p>Pick, convert and preview color codes.</p></div>
+          <div><button class="accordion-btn" data-target="color" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
+
+        <div class="tool-grid" id="color-grid">
+          <article class="card" data-tags="color picker hex rgb" role="article">
+            <div class="icon"><i class="fa-solid fa-palette"></i></div>
+            <h3>Color Picker</h3>
+            <p>Pick colors and get HEX/RGB values.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="convert hex rgb hsl" role="article">
+            <div class="icon"><i class="fa-solid fa-fill-drip"></i></div>
+            <h3>Color Converter</h3>
+            <p>Convert between HEX, RGB, HSL formats.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Developer Tools -->
+      <section class="section" data-cat="dev">
+        <div class="section-head">
+          <div><h2>Web / Developer Tools</h2><p>Format, minify, encode and test web content.</p></div>
+          <div><button class="accordion-btn" data-target="dev" aria-expanded="true">Collapse <i class="fa-solid fa-chevron-up"></i></button></div>
+        </div>
+
+        <div class="tool-grid" id="dev-grid">
+          <article class="card" data-tags="minify html css js" role="article">
+            <div class="icon"><i class="fa-solid fa-compress-arrows-alt"></i></div>
+            <h3>HTML / CSS / JS Minifier</h3>
+            <p>Minify code to reduce size for production.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="json format validate" role="article">
+            <div class="icon"><i class="fa-solid fa-code"></i></div>
+            <h3>JSON Formatter & Validator</h3>
+            <p>Format JSON and check for errors.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="base64 encode decode" role="article">
+            <div class="icon"><i class="fa-solid fa-file-code"></i></div>
+            <h3>Base64 Encode/Decode</h3>
+            <p>Encode text/data to Base64 and back.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="url encode decode" role="article">
+            <div class="icon"><i class="fa-solid fa-link"></i></div>
+            <h3>URL Encoder / Decoder</h3>
+            <p>Encode query strings and decode them back.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+
+          <article class="card" data-tags="regex test" role="article">
+            <div class="icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3>Regex Tester</h3>
+            <p>Run and test regular expressions with flags.</p>
+            <div class="btn-row"><a class="btn" href="#">Use Tool</a><button class="btn secondary">Info</button></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 Tool Hub (Tools Wonder) • Contact: <a href="mailto:toolshub@gmail.com">toolshub@gmail.com</a>
+    </footer>
   </div>
 
-  <!-- External libs (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-
   <script>
-    // ---------- Navigation & open tool ----------
-    document.querySelectorAll('[data-open]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); openSection(a.dataset.open); }));
-    document.querySelectorAll('.tool-card').forEach(tc=>tc.addEventListener('click',()=>openTool(tc.dataset.tool)));
-    const sectionMap = { image:'img-convert', doc:'img2pdf', calc:'age', text:'case', dev:'minify' };
-    function openSection(id){ openTool(sectionMap[id] || 'img-convert'); }
-    function openTool(toolId){
-      document.querySelectorAll('.tool-page').forEach(p=>p.classList.remove('active'));
-      const el = document.getElementById(toolId);
-      if(el) el.classList.add('active');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    openTool('img-convert');
+    // ========== DOM refs ==========
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const exploreBtn = document.getElementById('exploreBtn');
+    const mobileNavBtn = document.getElementById('mobileNavBtn');
+    const mobileNav = document.getElementById('mobileNav');
 
-    // ---------- Utilities ----------
-    function fileToDataURL(file){
-      return new Promise(res=>{
-        const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(file);
+    // ========== Theme toggle (persist) ==========
+    const savedTheme = localStorage.getItem('th') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    body.setAttribute('data-theme', savedTheme);
+    themeToggle.setAttribute('aria-pressed', savedTheme === 'dark');
+    updateThemeIcon();
+
+    function updateThemeIcon(){
+      themeToggle.innerHTML = document.documentElement.getAttribute('data-theme') === 'dark'
+        ? '<i class="fa-solid fa-sun"></i>'
+        : '<i class="fa-solid fa-moon"></i>';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      body.setAttribute('data-theme', next);
+      localStorage.setItem('th', next);
+      themeToggle.setAttribute('aria-pressed', next === 'dark');
+      updateThemeIcon();
+    });
+
+    // ========== Mobile nav toggle ==========
+    mobileNavBtn.addEventListener('click', () => {
+      const open = mobileNav.style.display === 'block';
+      mobileNav.style.display = open ? 'none' : 'block';
+      mobileNavBtn.setAttribute('aria-expanded', !open);
+    });
+
+    // ========== Accordion collapse/expand ==========
+    document.querySelectorAll('.accordion-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        const section = document.querySelector(`.section[data-cat="${target}"]`);
+        if(!section) return;
+        const grid = section.querySelector('.tool-grid');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !expanded);
+        btn.innerHTML = (!expanded ? 'Collapse <i class="fa-solid fa-chevron-up"></i>' : 'Expand <i class="fa-solid fa-chevron-down"></i>');
+        grid.style.display = expanded ? 'none' : 'grid';
+      });
+    });
+
+    // ========== Explore button scroll ==========
+    exploreBtn.addEventListener('click', () => {
+      document.getElementById('tools').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // ========== Search & filter ==========
+    function normalize(s){ return (s||'').toString().trim().toLowerCase(); }
+
+    function filterCards(){
+      const q = normalize(searchInput.value);
+      const cat = categoryFilter.value; // 'all' or category key
+      const cards = document.querySelectorAll('.card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const tags = normalize(card.dataset.tags || '');
+        const title = normalize(card.querySelector('h3')?.innerText || '');
+        const desc = normalize(card.querySelector('p')?.innerText || '');
+        // category check: check ancestor section's data-cat
+        const section = card.closest('.section');
+        const secCat = section ? section.dataset.cat : '';
+        const matchesCat = (cat === 'all') || (secCat === cat);
+
+        const matchesQuery = q === '' || title.includes(q) || desc.includes(q) || tags.includes(q);
+        const show = matchesCat && matchesQuery;
+
+        card.style.display = show ? '' : 'none';
+        if(show) visibleCount++;
+      });
+
+      // show clear button if search not empty
+      clearSearch.style.display = searchInput.value.trim() ? 'inline-block' : 'none';
+    }
+
+    searchInput.addEventListener('input', filterCards);
+    categoryFilter.addEventListener('change', filterCards);
+    clearSearch.addEventListener('click', () => { searchInput.value=''; filterCards(); clearSearch.style.display='none'; searchInput.focus(); });
+
+    // initialize
+    filterCards();
+
+    // Accessibility: keyboard quick nav alt+1..9 map to top 9 cards
+    window.addEventListener('keydown', (e) => {
+      if(e.altKey && !isNaN(parseInt(e.key))){
+        const idx = parseInt(e.key) - 1;
+        const cards = Array.from(document.querySelectorAll('.card'));
+        if(cards[idx]) cards[idx].querySelector('.btn')?.click();
+      }
+    });
+
+    // Lazy: collapse long pages for better mobile UX (optional)
+    // You can pre-collapse some sections on small screens
+    if(window.innerWidth < 720){
+      document.querySelectorAll('.accordion-btn').forEach(btn => {
+        const target = btn.dataset.target;
+        const section = document.querySelector(`.section[data-cat="${target}"]`);
+        const grid = section.querySelector('.tool-grid');
+        grid.style.display = 'none';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.innerHTML = 'Expand <i class="fa-solid fa-chevron-down"></i>';
       });
     }
-
-    async function loadImageToCanvas(file, canvas){
-      return new Promise((res, rej)=>{
-        const img=new Image();
-        img.onload=()=>{
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0);
-          res(canvas);
-        };
-        img.onerror = rej;
-        img.src = URL.createObjectURL(file);
-      });
-    }
-
-    // ---------- IMAGE: Convert ----------
-    document.getElementById('imgConvertBtn').addEventListener('click', async ()=>{
-      const f = document.getElementById('imgConvertFile').files[0]; if(!f) return alert('Select image');
-      const fmt = document.getElementById('imgConvertFormat').value;
-      const c = document.getElementById('imgConvertCanvas');
-      await loadImageToCanvas(f, c);
-      c.toBlob(b=>{
-        const a = document.createElement('a'); a.href = URL.createObjectURL(b);
-        const ext = fmt.includes('png')?'.png':fmt.includes('webp')?'.webp':'.jpg';
-        a.download = 'converted'+ext; a.click();
-      }, fmt);
-    });
-
-    // ---------- IMAGE: Compress ----------
-    document.getElementById('imgCompressBtn').addEventListener('click', async ()=>{
-      const f = document.getElementById('imgCompressFile').files[0]; if(!f) return alert('Select image');
-      const q = parseFloat(document.getElementById('imgQuality').value) || 0.8;
-      const c = document.createElement('canvas'); await loadImageToCanvas(f, c);
-      c.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='compressed.jpg'; a.click(); }, 'image/jpeg', q);
-    });
-
-    // ---------- IMAGE: Resize ----------
-    document.getElementById('imgResizeBtn').addEventListener('click', async ()=>{
-      const f = document.getElementById('imgResizeFile').files[0]; if(!f) return alert('Select image');
-      const w = document.getElementById('imgWidth').value, h = document.getElementById('imgHeight').value;
-      const img = new Image();
-      img.onload = ()=>{
-        const canvas = document.createElement('canvas');
-        const nw = w ? parseInt(w) : (h ? Math.round(img.width*(h/img.height)) : img.width);
-        const nh = h ? parseInt(h) : (w ? Math.round(img.height*(w/img.width)) : img.height);
-        canvas.width = nw; canvas.height = nh;
-        const ctx = canvas.getContext('2d'); ctx.drawImage(img,0,0,nw,nh);
-        canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='resized.jpg'; a.click(); }, 'image/jpeg', 0.92);
-      };
-      img.src = URL.createObjectURL(f);
-    });
-
-    // ---------- IMAGE: Crop (pointer events) ----------
-    (function(){
-      const fileIn = document.getElementById('imgCropFile');
-      const canvas = document.getElementById('imgCropCanvas');
-      const ctx = canvas.getContext('2d');
-      let imgObj = null, dragging=false, start=null, rect=null;
-
-      fileIn.addEventListener('change', e=>{
-        const f = e.target.files[0]; if(!f) return;
-        const img = new Image(); img.onload = ()=>{ imgObj = img; canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img,0,0); };
-        img.src = URL.createObjectURL(f);
-      });
-
-      function getPos(e){
-        const r = canvas.getBoundingClientRect();
-        const x = (e.clientX - r.left) * (canvas.width / r.width);
-        const y = (e.clientY - r.top) * (canvas.height / r.height);
-        return {x, y};
-      }
-
-      canvas.addEventListener('pointerdown', e=>{ if(!imgObj) return; dragging=true; start = getPos(e); });
-      canvas.addEventListener('pointermove', e=>{ if(!dragging || !imgObj) return; const cur = getPos(e); rect = { x: Math.min(start.x,cur.x), y: Math.min(start.y,cur.y), w: Math.abs(cur.x - start.x), h: Math.abs(cur.y - start.y) }; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(imgObj,0,0); if(rect){ ctx.strokeStyle='cyan'; ctx.lineWidth=2; ctx.strokeRect(rect.x,rect.y,rect.w,rect.h); ctx.fillStyle='rgba(0,200,200,0.12)'; ctx.fillRect(rect.x,rect.y,rect.w,rect.h); }});
-      window.addEventListener('pointerup', ()=>{ dragging=false; });
-
-      document.getElementById('resetCrop').addEventListener('click', ()=>{ if(!imgObj) return; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(imgObj,0,0); rect=null; });
-      document.getElementById('doCrop').addEventListener('click', ()=>{
-        if(!rect) return alert('Select area to crop');
-        const out = document.createElement('canvas'); out.width = Math.max(1, Math.round(rect.w)); out.height = Math.max(1, Math.round(rect.h));
-        out.getContext('2d').drawImage(canvas, rect.x, rect.y, rect.w, rect.h, 0, 0, out.width, out.height);
-        out.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='cropped.png'; a.click(); });
-      });
-    })();
-
-    // ---------- IMAGE: OCR (Tesseract) ----------
-    let _ocrWorker = null;
-    async function getTesseractWorker(){
-      if(_ocrWorker) return _ocrWorker;
-      const { createWorker } = Tesseract;
-      const worker = createWorker({ logger: m => console.log(m) });
-      await worker.load();
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
-      _ocrWorker = worker;
-      return worker;
-    }
-    document.getElementById('imgOcrBtn').addEventListener('click', async ()=>{
-      const f = document.getElementById('imgOcrFile').files[0]; if(!f) return alert('Select image');
-      const out = document.getElementById('imgOcrOut'); out.value = 'Processing... (may take a few seconds)';
-      try{
-        const worker = await getTesseractWorker();
-        const { data: { text } } = await worker.recognize(f);
-        out.value = text || '[No text detected]';
-      }catch(e){ out.value = 'Error: '+(e.message || e); }
-    });
-
-    // ---------- IMAGE: Rotate / Flip ----------
-    (function(){
-      const fileIn = document.getElementById('imgRotateFile'), canvas = document.getElementById('imgRotateCanvas'), ctx = canvas.getContext('2d');
-      let img = null, angle = 0, fx=false, fy=false;
-      fileIn.addEventListener('change', e=>{ const f = e.target.files[0]; if(!f) return; const im = new Image(); im.onload = ()=>{ img = im; angle = 0; fx=false; fy=false; canvas.width=im.width; canvas.height=im.height; ctx.drawImage(im,0,0); }; im.src = URL.createObjectURL(f); });
-      function redraw(){
-        if(!img) return;
-        const w = img.width, h = img.height;
-        const rad = angle * Math.PI/180;
-        const absCos = Math.abs(Math.cos(rad)), absSin = Math.abs(Math.sin(rad));
-        const nw = Math.round(w * absCos + h * absSin), nh = Math.round(w * absSin + h * absCos);
-        canvas.width = nw; canvas.height = nh;
-        ctx.clearRect(0,0,nw,nh);
-        ctx.save();
-        ctx.translate(nw/2, nh/2);
-        ctx.rotate(rad);
-        ctx.scale(fx? -1:1, fy? -1:1);
-        ctx.drawImage(img, -w/2, -h/2);
-        ctx.restore();
-      }
-      document.getElementById('rot90').addEventListener('click', ()=>{ angle += 90; redraw(); });
-      document.getElementById('flipH').addEventListener('click', ()=>{ fx = !fx; redraw(); });
-      document.getElementById('flipV').addEventListener('click', ()=>{ fy = !fy; redraw(); });
-      document.getElementById('saveRotate').addEventListener('click', ()=>{ canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='edited.png'; a.click(); }); });
-    })();
-
-    // ---------- IMAGE -> PDF (jsPDF) ----------
-    document.getElementById('img2pdfBtn').addEventListener('click', async ()=>{
-      const files = document.getElementById('img2pdfFiles').files; if(!files.length) return alert('Select images');
-      const { jsPDF } = window.jspdf || {};
-      if(!jsPDF){ alert('jsPDF not loaded'); return; }
-      const pdf = new jsPDF();
-      for(let i=0;i<files.length;i++){
-        const f = files[i];
-        const imgData = await fileToDataURL(f);
-        const img = new Image(); await new Promise(r=>{ img.onload=r; img.src = imgData; });
-        const ratio = Math.min(190 / img.width, 250 / img.height);
-        const w = img.width * ratio, h = img.height * ratio;
-        if(i>0) pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 10, 10, w, h);
-      }
-      pdf.save('images.pdf');
-    });
-
-    // ---------- PDF: Merge & Split (PDF-Lib) ----------
-    document.getElementById('pdfMergeBtn').addEventListener('click', async ()=>{
-      const files = document.getElementById('pdfMergeFiles').files;
-      if(files.length < 2) return alert('Select 2 or more PDFs to merge');
-      const { PDFDocument } = PDFLib;
-      const mergedPdf = await PDFDocument.create();
-      for(const f of files){
-        const arr = await f.arrayBuffer();
-        const donor = await PDFDocument.load(arr);
-        const copied = await mergedPdf.copyPages(donor, donor.getPageIndices());
-        copied.forEach(p=>mergedPdf.addPage(p));
-      }
-      const buf = await mergedPdf.save();
-      const blob = new Blob([buf], {type:'application/pdf'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'merged.pdf'; a.click();
-    });
-
-    document.getElementById('pdfSplitBtn').addEventListener('click', async ()=>{
-      const files = document.getElementById('pdfMergeFiles').files;
-      if(files.length !== 1) return alert('Select exactly 1 PDF to split');
-      const { PDFDocument } = PDFLib;
-      const arr = await files[0].arrayBuffer(); const src = await PDFDocument.load(arr);
-      for(let i=0;i<src.getPageCount();i++){
-        const dst = await PDFDocument.create();
-        const [p] = await dst.copyPages(src,[i]);
-        dst.addPage(p);
-        const buf = await dst.save();
-        const blob = new Blob([buf], {type:'application/pdf'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'page-'+(i+1)+'.pdf'; a.click();
-      }
-    });
-
-    document.getElementById('pdfCompressBtn').addEventListener('click', ()=>{ alert('Basic PDF compression demo — for production use server-side tools.'); });
-
-    // ---------- PDF Lock placeholder ----------
-    document.getElementById('pdfLockBtn').addEventListener('click', ()=>{ alert('PDF password protect/unprotect needs server-side libraries for robust handling. Use backend for production.'); });
-
-    // ---------- eSign (draw) ----------
-    (function(){
-      const canvas = document.getElementById('signCanvas'); const ctx = canvas.getContext('2d'); let drawing=false;
-      function resizeSign(){ canvas.width = canvas.clientWidth; canvas.height = 140; ctx.lineWidth = 2; ctx.strokeStyle = 'cyan'; }
-      resizeSign(); window.addEventListener('resize', resizeSign);
-      function pos(e){ const r = canvas.getBoundingClientRect(); return { x:(e.clientX - r.left)*(canvas.width/r.width), y:(e.clientY - r.top)*(canvas.height/r.height) }; }
-      canvas.addEventListener('pointerdown', e=>{ drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
-      canvas.addEventListener('pointermove', e=>{ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); });
-      window.addEventListener('pointerup', ()=> drawing=false);
-      document.getElementById('clearSign').addEventListener('click', ()=> ctx.clearRect(0,0,canvas.width,canvas.height));
-      document.getElementById('applySign').addEventListener('click', ()=> alert('Demo: signature drawn. To embed it into a PDF, use PDF-Lib to convert canvas to image and paste onto selected page.'));
-    })();
-
-    document.getElementById('pdf2wordBtn').addEventListener('click', ()=>{ alert('In-browser PDF→Word is limited. Use a server API (e.g., LibreOffice, CloudConvert) for accurate conversion.'); });
-
-    // ---------- CALCULATORS ----------
-    document.getElementById('calcAge').addEventListener('click', ()=>{
-      const d = document.getElementById('birthDate').value; if(!d) return alert('Choose date');
-      const bd = new Date(d), now = new Date();
-      let y = now.getFullYear() - bd.getFullYear(), m = now.getMonth() - bd.getMonth(), day = now.getDate() - bd.getDate();
-      if(day < 0){ m--; day += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-      if(m < 0){ y--; m += 12; }
-      document.getElementById('ageOut').innerText = `${y} years, ${m} months, ${day} days`;
-    });
-
-    document.getElementById('calcBmi').addEventListener('click', ()=>{
-      const w = parseFloat(document.getElementById('weight').value), h = parseFloat(document.getElementById('height').value)/100;
-      if(!w || !h) return alert('Enter weight & height');
-      document.getElementById('bmiOut').innerText = 'BMI: ' + (w/(h*h)).toFixed(2);
-    });
-
-    document.getElementById('calcEmi').addEventListener('click', ()=>{
-      const P = parseFloat(document.getElementById('loanAmt').value), rAnnual = parseFloat(document.getElementById('interest').value), years = parseFloat(document.getElementById('loanTenure').value);
-      if(!P || !rAnnual || !years) return alert('Enter loan, interest & tenure');
-      const r = rAnnual/100/12, n = years*12;
-      const emi = (P*r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
-      document.getElementById('emiOut').innerText = `EMI: ${emi.toFixed(2)} per month`;
-    });
-
-    document.getElementById('calcGst').addEventListener('click', ()=>{
-      const amt = parseFloat(document.getElementById('gstAmount').value), rate = parseFloat(document.getElementById('gstRate').value);
-      if(!amt) return alert('Enter amount');
-      const gst = amt * rate/100;
-      document.getElementById('gstOut').innerText = `GST ${rate}% = ${gst.toFixed(2)} | Total = ${(amt+gst).toFixed(2)}`;
-    });
-
-    document.getElementById('curConvert').addEventListener('click', ()=>{
-      const a = parseFloat(document.getElementById('curAmt').value) || 0, r = parseFloat(document.getElementById('curRate').value) || 1;
-      document.getElementById('curOut').innerText = (a*r).toFixed(4);
-    });
-
-    // ---------- TEXT TOOLS ----------
-    document.querySelectorAll('[data-action]').forEach(b=>b.addEventListener('click', ()=>{
-      const v = document.getElementById('caseIn').value || '', op = b.dataset.action; let out = '';
-      if(op === 'upper') out = v.toUpperCase();
-      if(op === 'lower') out = v.toLowerCase();
-      if(op === 'title') out = v.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.substr(1).toLowerCase());
-      if(op === 'sentence') out = v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
-      document.getElementById('caseOut').value = out;
-    }));
-
-    document.getElementById('countIn').addEventListener('input', ()=>{
-      const t = document.getElementById('countIn').value || '';
-      const words = t.trim() === '' ? 0 : t.trim().split(/\s+/).length;
-      const chars = t.length;
-      document.getElementById('countOut').innerText = `Words: ${words} — Characters: ${chars}`;
-    });
-
-    document.getElementById('uniqBtn').addEventListener('click', ()=>{
-      const lines = document.getElementById('uniqIn').value.split(/\r?\n/);
-      const seen = new Set(); const out = [];
-      lines.forEach(l=>{ if(!seen.has(l)){ seen.add(l); out.push(l); }});
-      document.getElementById('uniqOut').value = out.join('\n');
-    });
-
-    document.getElementById('sortAsc').addEventListener('click', ()=>{
-      const lines = document.getElementById('sortIn').value.split(/\r?\n/).filter(Boolean); lines.sort(); document.getElementById('sortOut').value = lines.join('\n');
-    });
-    document.getElementById('sortDesc').addEventListener('click', ()=>{
-      const lines = document.getElementById('sortIn').value.split(/\r?\n/).filter(Boolean); lines.sort().reverse(); document.getElementById('sortOut').value = lines.join('\n');
-    });
-
-    document.getElementById('revBtn').addEventListener('click', ()=>{ const t = document.getElementById('revIn').value || ''; document.getElementById('revOut').value = t.split('').reverse().join(''); });
-
-    function xorEncrypt(text,key){ if(!key) return text; let out=''; for(let i=0;i<text.length;i++){ out += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return btoa(unescape(encodeURIComponent(out))); }
-    function xorDecrypt(b64,key){ if(!key) return b64; try{ const s = decodeURIComponent(escape(atob(b64))); let out=''; for(let i=0;i<s.length;i++){ out += String.fromCharCode(s.charCodeAt(i) ^ key.charCodeAt(i % key.length)); } return out; } catch(e){ return 'Invalid input/key'; } }
-    document.getElementById('encDo').addEventListener('click', ()=>{ const txt = document.getElementById('encIn').value || ''; const key = document.getElementById('encKey').value || ''; document.getElementById('encOut').value = xorEncrypt(txt,key); });
-    document.getElementById('decDo').addEventListener('click', ()=>{ const txt = document.getElementById('encIn').value || ''; const key = document.getElementById('encKey').value || ''; document.getElementById('encOut').value = xorDecrypt(txt,key); });
-
-    // ---------- DEV TOOLS ----------
-    function minifyHTML(s){ return s.replace(/>\s+</g,'><').replace(/<!--[\s\S]*?-->/g,'').trim(); }
-    function minifyCSS(s){ return s.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').replace(/\s*([{}:,;])\s*/g,'$1').trim(); }
-    function minifyJS(s){ return s.replace(/\/\/.*$/gm,'').replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').trim(); }
-    document.querySelectorAll('#minify button[data-lang]').forEach(b=>b.addEventListener('click', ()=>{
-      const inp = document.getElementById('minIn').value || '', out = document.getElementById('minOut');
-      if(b.dataset.lang === 'html') out.value = minifyHTML(inp);
-      if(b.dataset.lang === 'css') out.value = minifyCSS(inp);
-      if(b.dataset.lang === 'js') out.value = minifyJS(inp);
-    }));
-
-    document.getElementById('jsonFmt').addEventListener('click', ()=>{ try{ const o = JSON.parse(document.getElementById('jsonIn').value); document.getElementById('jsonOut').value = JSON.stringify(o,null,2); }catch(e){ alert('Invalid JSON: '+e.message); }});
-    document.getElementById('jsonValidate').addEventListener('click', ()=>{ try{ JSON.parse(document.getElementById('jsonIn').value); alert('Valid JSON'); }catch(e){ alert('Invalid JSON: '+e.message); }});
-
-    document.getElementById('b64Enc').addEventListener('click', ()=>{ const s = document.getElementById('b64In').value || ''; document.getElementById('b64Out').value = btoa(unescape(encodeURIComponent(s))); });
-    document.getElementById('b64Dec').addEventListener('click', ()=>{ try{ const s = document.getElementById('b64In').value || ''; document.getElementById('b64Out').value = decodeURIComponent(escape(atob(s))); }catch(e){ alert('Invalid Base64'); } });
-
-    document.getElementById('urlEnc').addEventListener('click', ()=>{ document.getElementById('urlOut').value = encodeURIComponent(document.getElementById('urlIn').value || ''); });
-    document.getElementById('urlDec').addEventListener('click', ()=>{ document.getElementById('urlOut').value = decodeURIComponent(document.getElementById('urlIn').value || ''); });
-
-    document.getElementById('colorPick').addEventListener('input', e=>{
-      const v = e.target.value || '#000000'; document.getElementById('colorHex').value = v;
-      const rgb = hexToRgb(v);
-      document.getElementById('colorOut').innerText = rgb ? 'RGB: '+rgb.join(', ') : '';
-    });
-    function hexToRgb(hex){
-      if(!hex) return null; const h = hex.replace('#','');
-      if(h.length === 3) { return [parseInt(h[0]+h[0],16), parseInt(h[1]+h[1],16), parseInt(h[2]+h[2],16)]; }
-      if(h.length === 6) { return [parseInt(h.substring(0,2),16), parseInt(h.substring(2,4),16), parseInt(h.substring(4,6),16)]; }
-      return null;
-    }
-
-    document.getElementById('regexTest').addEventListener('click', ()=>{
-      const pat = document.getElementById('regexIn').value || '', flags = document.getElementById('regexFlags').value || '', txt = document.getElementById('regexText').value || '';
-      try{ const r = new RegExp(pat, flags); const res = [...txt.matchAll(r)].map(m=>m[0]); document.getElementById('regexOut').value = JSON.stringify(res, null, 2); } catch(e){ document.getElementById('regexOut').value = 'Error: '+e.message; }
-    });
-
-    // quick nav: alt+1..9 to open sidebar tools
-    window.addEventListener('keydown', e=>{ if(e.altKey && !isNaN(parseInt(e.key))){ const idx = parseInt(e.key); const all = Array.from(document.querySelectorAll('.tool-card')); if(all[idx-1]) all[idx-1].click(); } });
-
-    // End — single-file client-side app.
-    // For production: move heavy libraries to lazy-load, and implement server endpoints for advanced PDF and currency features.
   </script>
 </body>
 </html>
